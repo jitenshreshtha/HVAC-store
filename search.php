@@ -153,6 +153,7 @@ function searchDatabase() {
     .then(response => response.text())
     .then(data => {
       document.getElementById('searchResults').innerHTML = data;
+      document.getElementById('pdfData').value = JSON.stringify(data);
     })
     .catch(error => console.error('Error:', error));
 }
@@ -174,4 +175,5 @@ function deleteRecord(type, id) {
     .catch(error => console.error('Error:', error));
   }
 }
+
 </script>

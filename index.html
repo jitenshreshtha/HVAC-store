@@ -308,32 +308,35 @@
       document.addEventListener("DOMContentLoaded", () => {
         showSection("customerManagement");
       });
-
       function searchDatabase() {
         const searchTerm = document.getElementById("searchInput").value;
         const searchResultsContainer = document.getElementById("searchResults");
-        const currentSection = document.querySelector(
-          "section[style*='display: block']"
-        );
 
-        // Hide all sections
-        const sections = document.querySelectorAll("section");
-        sections.forEach((section) => {
-          section.style.display = "none";
-        });
-
-        // Show loading indicator
-        searchResultsContainer.innerHTML = "<p>Searching...</p>";
-
-        fetch(`search.php?searchTerm=${searchTerm}`)
+        fetch(`search.php?searchTerm=${encodeURIComponent(searchTerm)}`)
           .then((response) => response.text())
           .then((data) => {
-            // Clear previous results and show new results
             searchResultsContainer.innerHTML = `
-                <h2>Search Results for "${searchTerm}"</h2>
-                ${data}
-                <button onclick="returnToOriginalSection()" class="prevBtn">Back to Previous Section</button>
-            `;
+          <div class="search-header">
+            <h2>Search Results for "${searchTerm}"</h2>
+            <button onclick="generatePDF()">Print</button>
+          </div>
+          ${data}
+          <button onclick="returnToOriginalSection()" class="prevBtn">Back to Previous Section</button>
+      `;
+            // Extract data from the form fields
+            const forms = document.querySelectorAll("#searchResults form");
+            const formDataArray = Array.from(forms).map((form) => {
+              const formData = new FormData(form);
+              const formObject = {};
+              formData.forEach((value, key) => {
+                formObject[key] = value;
+              });
+              return formObject;
+            });
+
+            // Set the extracted data as JSON in the hidden input field
+            document.getElementById("pdfData").value =
+              JSON.stringify(formDataArray);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -342,6 +345,11 @@
           });
       }
 
+      function generatePDF() {
+        const pdfData = document.getElementById("pdfData").value;
+        console.log("PDF Data:", pdfData); // Log the data to check if it's populated
+        document.getElementById("pdfForm").submit();
+      }
       // Function to return to the original section
       function returnToOriginalSection() {
         const searchResultsContainer = document.getElementById("searchResults");
@@ -358,6 +366,10 @@
         });
       }
     </script>
+
+    <form id="pdfForm" method="post" action="generate_pdf.php" target="_blank">
+      <input type="hidden" id="pdfData" name="pdfData" />
+    </form>
 
     <footer>
       <p>&copy; 2024 HVAC Innovators</p>

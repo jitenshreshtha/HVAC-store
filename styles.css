@@ -91,6 +91,33 @@
     color: var(--primaryColor);
     border-color: var(--primaryColor);
   }
+  .search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .search-header h2 {
+    margin: 0;
+  }
+  
+  .search-header button {
+    padding: 10px 20px;
+    border: 2px solid var(--primaryColor);
+    border-left: none;
+    background-color: var(--primaryColor);
+    color: var(--secondaryColor);
+    border-radius: 0 4px 4px 0;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease; 
+  }
+  .search-header button:hover{
+    color: var(--primaryColor);
+    border-color: var(--primaryColor);
+    background-color: var(--secondaryColor);
+  }
   .prevBtn{
     padding: 10px 20px;
     border: 1px solid black;
